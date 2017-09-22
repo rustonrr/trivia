@@ -6,8 +6,12 @@ class App extends Component {
   constructor() {
     super();
       this.state = {
-        questions: []
+        questions: [],
+        difficulty: ''
       }
+      this.hardButton = this.hardButton.bind(this)
+      this.easyButton = this.easyButton.bind(this)
+      this.medButton = this.medButton.bind(this)
   }
 
   componentWillMount(){
@@ -16,6 +20,21 @@ class App extends Component {
         questions: response.data
       })
       console.log(this.state.questions)
+    })
+  }
+  hardButton(){
+    this.setState({
+      difficulty: 3
+    })
+  }
+  medButton(){
+    this.setState({
+      difficulty: 2
+    })
+  }
+  easyButton(){
+    this.setState({
+      difficulty: 1
     })
   }
 
@@ -37,9 +56,50 @@ class App extends Component {
         </div>
       )
     })
+
+
+
+    let filteredQs = this.state.questions.filter((e)=>{
+      if(e.difficulty === this.state.difficulty ){
+        return e
+      }else{
+        return null
+      }
+    })
+
+    let mapQuestionsByDiff = filteredQs.map( (current, index) => {
+      return(
+        <div className="results" key={index}>
+          <h1>{current.question}</h1>
+          <p> Difficulty: {current.difficulty}</p>
+          <div className="answers">
+            <ul>
+            <li>{current.options[1]}</li>
+            
+            <li>{current.options[2]}</li>
+            <li>{current.options[3]}</li>
+            <li>{current.options[4]}</li>
+          </ul>
+            </div>
+        </div>
+
+)
+})
+
+
+
+let switcher = this.state.difficulty ? mapQuestionsByDiff: questions
+
     return (
       <div>
-        {questions}
+        <nav>
+          <button onClick={this.hardButton}>Hard</button>
+          <button onClick={this.medButton}>Medium</button>
+
+          <button onClick={this.easyButton}>Easy</button>
+
+        </nav>
+        {switcher}
       </div>
     );
   }

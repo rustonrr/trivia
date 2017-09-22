@@ -6,8 +6,11 @@ class App extends Component {
   constructor() {
     super();
       this.state = {
-        questions: []
+        questions: [],
+        deleteButtonClicked: false
       }
+      this.deleteButton = this.deleteButton.bind(this);
+      this.secondDeleteButton = this.secondDeleteButton.bind(this);
   }
 
   componentWillMount(){
@@ -19,6 +22,28 @@ class App extends Component {
     })
   }
 
+  deleteButton(){
+    console.log('first button clicked');
+    this.setState({
+      deleteButtonClicked: true
+    })
+  }
+
+  secondDeleteButton(questionid){
+    console.log('deleted');
+    this.setState({
+      deleteButtonClicked: false
+    })
+
+    let newQuestions = this.state.questions;
+    for(let i = 0; i < newQuestions.length; i++) {
+        if(newQuestions[i]._id === questionid) {
+            newQuestions.splice(i, 1)
+        }
+    }
+    axios.delete(`https://practiceapi.devmountain.com/api/trivia/questions/${questionid}`)
+  }
+
   render() {
     let questions = this.state.questions.map( (current, index) => {
       return(
@@ -27,13 +52,15 @@ class App extends Component {
           <p> Difficulty: {current.difficulty}</p>
           <div className="answers">
             <ul>
-            <li>{current.options[1]}</li>
-            
-            <li>{current.options[2]}</li>
-            <li>{current.options[3]}</li>
-            <li>{current.options[4]}</li>
-          </ul>
-            </div>
+              <li>{current.options[1]}</li>
+              
+              <li>{current.options[2]}</li>
+              <li>{current.options[3]}</li>
+              <li>{current.options[4]}</li>
+            </ul>
+            <button onClick={() => {this.deleteButton()}}>Delete</button>
+            <button hidden={!this.state.deleteButtonClicked} onClick={ () => {this.secondDeleteButton(current._id)} }>Are you sure?</button>
+          </div>
         </div>
       )
     })

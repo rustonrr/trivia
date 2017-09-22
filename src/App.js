@@ -7,11 +7,16 @@ class App extends Component {
     super();
       this.state = {
         questions: [],
+        deleteButtonClicked: false,
         difficulty: ''
       }
       this.hardButton = this.hardButton.bind(this)
       this.easyButton = this.easyButton.bind(this)
       this.medButton = this.medButton.bind(this)
+    
+    this.deleteButton = this.deleteButton.bind(this);
+    this.secondDeleteButton = this.secondDeleteButton.bind(this);
+      
   }
 
   componentWillMount(){

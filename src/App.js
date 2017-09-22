@@ -1,18 +1,45 @@
 import React, { Component } from 'react';
-import logo from './logo.svg';
+import axios from 'axios';
 import './App.css';
 
 class App extends Component {
+  constructor() {
+    super();
+      this.state = {
+        questions: []
+      }
+  }
+
+  componentWillMount(){
+    axios.get('https://practiceapi.devmountain.com/api/trivia/questions/').then(response => {
+      this.setState({
+        questions: response.data
+      })
+      console.log(this.state.questions)
+    })
+  }
+
   render() {
-    return (
-      <div className="App">
-        <div className="App-header">
-          <img src={logo} className="App-logo" alt="logo" />
-          <h2>Welcome to React</h2>
+    let questions = this.state.questions.map( (current, index) => {
+      return(
+        <div className="results" key={index}>
+          <h1>{current.question}</h1>
+          <p> Difficulty: {current.difficulty}</p>
+          <div className="answers">
+            <ul>
+            <li>{current.options[1]}</li>
+            
+            <li>{current.options[2]}</li>
+            <li>{current.options[3]}</li>
+            <li>{current.options[4]}</li>
+          </ul>
+            </div>
         </div>
-        <p className="App-intro">
-          To get started, edit <code>src/App.js</code> and save to reload.
-        </p>
+      )
+    })
+    return (
+      <div>
+        {questions}
       </div>
     );
   }
